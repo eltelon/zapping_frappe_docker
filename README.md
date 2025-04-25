@@ -88,3 +88,80 @@ This repository is only for container related stuff. You also might want to cont
 - [Frappe framework](https://github.com/frappe/frappe#contributing),
 - [ERPNext](https://github.com/frappe/erpnext#contributing),
 - [Frappe Bench](https://github.com/frappe/bench).
+
+
+
+#### ZAPPING ####
+
+#Readme enriched by Zapping
+
+#This tutorial has been created using https://discuss.frappe.io/t/tutorial-erpnext-15-setup-docker/112103
+
+
+
+#USE THIS CONFIGURATION IT YOU WANT SKIP REDIS CONFIGURATION
+#Configuration 
+```
+$ nvm use v18
+$ PYENV_VERSION=3.10.13 bench init \
+  --skip-redis-config-generation \
+  --frappe-branch version-15 \
+  frappe-bench
+```
+
+$ cd frappe-bench/
+#It's possible configure redis in a config like this:
+```
+{
+  "redis_cache": "redis://:password@host_redis:6379/0",
+  "redis_queue": "redis://:password@host_redis:6379/1",
+  "redis_socketio": "redis://:password@host_redis:6379/2"
+}
+```
+
+#However it's possible configure redis using bench command
+
+```
+$ bench set-config -g db_host localhost
+$ bench set-config -g redis_cache redis://redis-cache:6379
+$ bench set-config -g redis_queue redis://redis-queue:6379
+$ bench set-config -g redis_socketio redis://redis-queue:6379
+```
+
+#To configure a site called zapping.local, it's posible using this command:
+```
+#$ bench new-site erp.zapping.live --db-type mariadb --db-host host --db-port port --db-name erp_zapping --db-root-username erpnext --db-password 123
+
+$ bench new-site --mariadb-root-password 123 --admin-password admin --no-mariadb-socket erp.zapping.live
+```
+
+#Commands getting custom app from a private repository
+```
+$ bench get-app erpnext https://github.com/eltelon/zapping_frappe_erpnext
+$ bench get-app payments https://github.com/eltelon/zapping_frappe_payments
+```
+
+
+$ bench get-app --branch version-15 erpnext
+$ bench get-app --branch version-15 https://github.com/frappe/payments.git
+
+#Commands to install custom apps in your site
+$ bench use erp.zapping.live #this command setted your default site
+
+$ bench install-app erpnext
+$ bench install-app payments
+
+#Comandos para obtener una app de un repositorio
+$ bench get-app erpnext https://github.com/eltelon/zapping_frappe_erpnext
+$ bench get-app payments https://github.com/eltelon/zapping_frappe_payments
+
+##Extras
+#Command to update a custom_app
+$ bench --site name_of_site migrate
+
+#If you make changes that require DocType, fixtures, or migrations, make sure you have them versioned and exported with:
+$ bench --site name_of_site export-fixtures --app name_of_custom_app
+
+#Sometimes it's necessary compile frontend if you make some changes:
+$ bench build
+
