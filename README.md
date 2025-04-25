@@ -122,7 +122,7 @@ $ cd frappe-bench/
 #However it's possible configure redis using bench command
 
 ```
-$ bench set-config -g db_host localhost
+$ bench set-config -g db_host mariadb
 $ bench set-config -g redis_cache redis://redis-cache:6379
 $ bench set-config -g redis_queue redis://redis-queue:6379
 $ bench set-config -g redis_socketio redis://redis-queue:6379
